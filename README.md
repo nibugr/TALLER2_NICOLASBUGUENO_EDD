@@ -9,7 +9,7 @@ Flujo: `Archivo -> Cola -> Arbol de decision -> Servicio -> AVL`
 
 | Nombre | RUT | Usuario GitHub | Carrera | Paralelo |
 |--------|-----|----------------|---------|----------|
-| Nicolas Bugueno | 20.007.300-2 | nibugr | ICCI | C2 |
+| Nicolas Bugueño Rementería | 20.007.300-2 | nibugr | ICCI | C2 |
 
 ## Compilacion y ejecucion (Codespace / Linux)
 
