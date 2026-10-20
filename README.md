@@ -1,4 +1,4 @@
-# Hospital Marmaja - Taller 02 (Estructura de Datos)
+# Hospital Marmaja EXTENSION - Taller N°2 Estructura de Datos
 
 Clasificacion de pacientes con un arbol de decision y almacenamiento en arboles AVL
 segun el servicio asignado.
@@ -9,7 +9,7 @@ Flujo: `Archivo -> Cola -> Arbol de decision -> Servicio -> AVL`
 
 | Nombre | RUT | Usuario GitHub | Carrera | Paralelo |
 |--------|-----|----------------|---------|----------|
-| Nicolas Bugueno | _(completar)_ | nibugr | ICCI | _(completar)_ |
+| Nicolas Bugueno | 20.007.300-2 | nibugr | ICCI | C2 |
 
 ## Compilacion y ejecucion (Codespace / Linux)
 
