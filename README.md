@@ -1,4 +1,4 @@
-# Hospital Marmaja EXTENSION - Taller N°2 Estructura de Datos
+# Hospital Marmaja EXTENSIÓN - Taller N°2 Estructura de Datos
 
 Clasificacion de pacientes con un arbol de decision y almacenamiento en arboles AVL
 segun el servicio asignado.
