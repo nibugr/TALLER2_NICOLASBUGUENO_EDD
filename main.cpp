@@ -1,29 +1,15 @@
-// main provisorio: carga el archivo, arma el arbol de decision y clasifica
-// a los pacientes en orden de llegada. El AVL y el menu vienen despues.
+// main provisorio: clasifica a los pacientes y los guarda en un AVL por servicio.
+// Despues hace unas pruebas del AVL. El menu final viene en el ultimo commit.
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include "Cola.h"
 #include "Lector.h"
 #include "ArbolDecision.h"
+#include "ArbolAVL.h"
 #include "Servicio.h"
 
 using namespace std;
-
-static void mostrarPaciente(const Paciente& p) {
-    cout << "ID: " << setw(3) << setfill('0') << p.id << setfill(' ') << endl;
-    cout << "Nombre : " << p.nombre << endl;
-    cout << "Edad: " << p.edad << endl;
-    cout << "Temperatura : " << fixed << setprecision(1) << p.temperatura << endl;
-    cout << "PresionArterial : " << p.presionArterial << endl;
-    cout << "Dolor : " << p.dolor << endl;
-    cout << "TipoDolor : " << p.tipoDolor << endl;
-    cout << "Trauma : " << p.trauma << endl;
-    cout << "SintomasNeurologicos : " << p.sintomasNeurologicos << endl;
-    cout << "RequiereCirugia : " << p.requiereCirugia << endl;
-    cout << "DiasHospitalizacion : " << p.diasHospitalizacion << endl;
-}
 
 int main(int argc, char* argv[]) {
     string ruta = "pacientes.txt";
@@ -32,49 +18,102 @@ int main(int argc, char* argv[]) {
     }
 
     Cola cola;
-    int cargados = cargarPacientes(ruta, cola);
-    if (cargados < 0) {
+    if (cargarPacientes(ruta, cola) < 0) {
         return 1;
     }
 
-    ArbolDecision arbol;
-    arbol.construir();
+    ArbolDecision decision;
+    decision.construir();
 
-    cout << endl;
-    arbol.mostrarArbol();
-    cout << "Nodos: " << arbol.getCantidadNodos()
-         << " | Altura: " << arbol.getAltura() << endl;
-    cout << endl;
-    arbol.mostrarPreorden();
-    cout << endl;
-    arbol.mostrarInorden();
-    cout << endl;
-    arbol.mostrarPostorden();
+    // un AVL por servicio
+    ArbolAVL* hospital[NUM_SERVICIOS];
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        hospital[i] = new ArbolAVL(nombreServicio(i));
+        hospital[i]->setMostrarRotaciones(true);
+    }
 
     cout << endl << "=== ATENDIENDO PACIENTES ===" << endl;
-
-    int contador[NUM_SERVICIOS];
-    for (int i = 0; i < NUM_SERVICIOS; i++) {
-        contador[i] = 0;
-    }
+    Paciente primero;
+    bool hayPrimero = false;
+    Servicio servicioPrimero = MEDICINA_GENERAL;
 
     Paciente p;
     while (cola.desencolar(p)) {
-        cout << endl;
-        mostrarPaciente(p);
-
         string rutaDecision;
-        Servicio s = arbol.evaluar(p, rutaDecision);
-        contador[s]++;
+        Servicio s = decision.evaluar(p, rutaDecision);
 
-        cout << "Ruta: " << rutaDecision << endl;
-        cout << "Servicio asignado : " << nombreServicio(s) << endl;
+        cout << p.id << " | " << p.nombre << " -> " << nombreServicio(s) << endl;
+        if (!hospital[s]->insertar(p)) {
+            cout << "  No se inserto: ya existe el ID " << p.id << endl;
+        }
+
+        if (!hayPrimero) {
+            primero = p;
+            servicioPrimero = s;
+            hayPrimero = true;
+        }
     }
 
-    cout << endl << "=== RESUMEN POR SERVICIO ===" << endl;
+    cout << endl << "=== ESTADO DE LOS SERVICIOS ===" << endl;
     for (int i = 0; i < NUM_SERVICIOS; i++) {
-        cout << nombreServicio(i) << ": " << contador[i] << endl;
+        cout << nombreServicio(i) << " (pacientes: " << hospital[i]->getCantidad()
+             << ", altura: " << hospital[i]->getAltura() << ")" << endl;
+        hospital[i]->mostrarInorden();
     }
 
+    // pruebas sobre el servicio con mas pacientes
+    int mayor = 0;
+    for (int i = 1; i < NUM_SERVICIOS; i++) {
+        if (hospital[i]->getCantidad() > hospital[mayor]->getCantidad()) {
+            mayor = i;
+        }
+    }
+    ArbolAVL* arbol = hospital[mayor];
+
+    cout << endl << "=== PRUEBAS DEL AVL: " << nombreServicio(mayor) << " ===" << endl;
+    cout << "Preorden:" << endl;
+    arbol->mostrarPreorden();
+    cout << "Postorden:" << endl;
+    arbol->mostrarPostorden();
+    cout << "Altura y factor de balance:" << endl;
+    arbol->mostrarFactores();
+
+    if (hayPrimero) {
+        string rutaBusqueda;
+        cout << endl << "Buscar por ID " << primero.id << " en " << nombreServicio(servicioPrimero) << ": ";
+        const Paciente* r = hospital[servicioPrimero]->buscarPorId(primero.id, rutaBusqueda);
+        if (r != NULL) {
+            cout << "encontrado (ruta: " << rutaBusqueda << ")" << endl;
+        } else {
+            cout << "no encontrado" << endl;
+        }
+
+        cout << "Buscar por nombre '" << primero.nombre << "': ";
+        r = hospital[servicioPrimero]->buscarPorNombre(primero.nombre);
+        if (r != NULL) {
+            cout << "encontrado (ID " << r->id << ")" << endl;
+        } else {
+            cout << "no encontrado" << endl;
+        }
+
+        cout << "Eliminar ID " << primero.id << ": ";
+        if (hospital[servicioPrimero]->eliminar(primero.id)) {
+            cout << "eliminado" << endl;
+        } else {
+            cout << "no existe" << endl;
+        }
+        cout << "Eliminar de nuevo el ID " << primero.id << ": ";
+        if (hospital[servicioPrimero]->eliminar(primero.id)) {
+            cout << "eliminado" << endl;
+        } else {
+            cout << "no existe" << endl;
+        }
+        cout << nombreServicio(servicioPrimero) << " despues de eliminar:" << endl;
+        hospital[servicioPrimero]->mostrarInorden();
+    }
+
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        delete hospital[i];
+    }
     return 0;
 }

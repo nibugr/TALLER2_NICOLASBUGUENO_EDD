@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -g
 
-OBJS = main.o Cola.o Lector.o ArbolDecision.o
+OBJS = main.o Cola.o Lector.o ArbolDecision.o ArbolAVL.o
 
 hospital: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o hospital $(OBJS)

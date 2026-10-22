@@ -1,0 +1,17 @@
+# Pacientes sanos con IDs en un orden que obliga al AVL a rotar
+# ID;Nombre;Edad;Temperatura;PresionArterial;Dolor;TipoDolor;Trauma;SintomasNeurologicos;RequiereCirugia;DiasHospitalizacion
+30;Paciente 30;30;37.0;120;2;otro;0;0;0;0
+20;Paciente 20;30;37.0;120;2;otro;0;0;0;0
+10;Paciente 10;30;37.0;120;2;otro;0;0;0;0
+40;Paciente 40;30;37.0;120;2;otro;0;0;0;0
+50;Paciente 50;30;37.0;120;2;otro;0;0;0;0
+35;Paciente 35;30;37.0;120;2;otro;0;0;0;0
+5;Paciente 5;30;37.0;120;2;otro;0;0;0;0
+8;Paciente 8;30;37.0;120;2;otro;0;0;0;0
+60;Paciente 60;30;37.0;120;2;otro;0;0;0;0
+70;Paciente 70;30;37.0;120;2;otro;0;0;0;0
+65;Paciente 65;30;37.0;120;2;otro;0;0;0;0
+3;Paciente 3;30;37.0;120;2;otro;0;0;0;0
+1;Paciente 1;30;37.0;120;2;otro;0;0;0;0
+2;Paciente 2;30;37.0;120;2;otro;0;0;0;0
+4;Paciente 4;30;37.0;120;2;otro;0;0;0;0
